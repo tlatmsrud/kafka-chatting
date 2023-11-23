@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
@@ -27,6 +28,9 @@ dependencies {
 
     // kafka
     implementation 'org.springframework.kafka:spring-kafka'
+
+    // h2
+    runtimeOnly 'com.h2database:h2:1.4.200'
 }
 
 test {
