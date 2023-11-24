@@ -2,8 +2,6 @@ package org.ssk.domain.chatting.dto;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 /**
  * title        :
  * author       : sim
@@ -15,5 +13,15 @@ import java.time.LocalDateTime;
 public class ChattingDto {
     private String sessionId;
     private String message;
-    private LocalDateTime localDateTime;
+    private String time;
+
+    private ChattingDto(String sessionId, String message, String time){
+        this.sessionId = sessionId;
+        this.message = message;
+        this.time = time;
+    }
+
+    public static ChattingDto of(String sessionId, String message, String time){
+        return new ChattingDto(sessionId, message, time);
+    }
 }
