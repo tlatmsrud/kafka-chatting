@@ -1,10 +1,14 @@
 package org.ssk.domain.chatting.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ssk.domain.chatting.dto.ChattingDto;
+import org.ssk.domain.chatting.service.ChattingService;
+
+import java.util.List;
 
 /**
  * title        :
@@ -15,11 +19,14 @@ import org.ssk.domain.chatting.dto.ChattingDto;
 
 @RestController
 @RequestMapping("/polling")
+@RequiredArgsConstructor
 public class PollingChattingController {
 
+    private final ChattingService chattingService;
+
     @GetMapping("/chatting/{roomId}")
-    public ChattingDto getChatting(@PathVariable String roomId){
-        return null;
+    public List<ChattingDto> getChatting(@PathVariable Long roomId){
+        return chattingService.getChattingListByRoomId(roomId);
     }
 }
 
