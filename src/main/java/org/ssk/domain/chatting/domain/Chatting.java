@@ -22,6 +22,10 @@ public class Chatting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
+
+    @ManyToOne
+    @JoinColumn(name = "roomId")
+    private ChattingRoom roomId;
     private String sessionId;
     private String message;
     private String time;
