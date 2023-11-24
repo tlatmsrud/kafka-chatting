@@ -12,7 +12,6 @@ import lombok.Getter;
 @Getter
 public class SendDto {
 
-    private String sessionId;
-    private String roomId;
+    private Long roomId;
     private String message;
 }
