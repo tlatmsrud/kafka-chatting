@@ -2,8 +2,10 @@ package org.ssk.domain.chatting.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.ssk.domain.chatting.domain.ChattingRoom;
 import org.ssk.domain.chatting.dto.ChattingDto;
 import org.ssk.domain.chatting.repository.ChattingRepository;
+import org.ssk.domain.chatting.repository.ChattingRoomRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,9 +22,14 @@ import java.util.stream.Collectors;
 public class PollingSelect implements ChattingSelectStrategy{
 
     private final ChattingRepository chattingRepository;
+    private final ChattingRoomRepository chattingRoomRepository;
     @Override
     public List<ChattingDto> selectChattingByRoomId(Long roomId) {
-        return chattingRepository.findByRoomId(roomId)
+
+        ChattingRoom findChattingRoom = chattingRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("room is not exists"));
+
+        return chattingRepository.findByRoomId(findChattingRoom)
                 .stream().map(entity -> ChattingDto.of(entity.getSessionId(), entity.getMessage(), entity.getTime()))
                 .collect(Collectors.toList());
     }
