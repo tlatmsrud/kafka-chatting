@@ -3,6 +3,8 @@ package org.ssk.domain.chatting.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.ssk.domain.chatting.domain.Chatting;
 
+import java.util.List;
+
 /**
  * title        :
  * author       : sim
@@ -10,4 +12,5 @@ import org.ssk.domain.chatting.domain.Chatting;
  * description  :
  */
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
+    List<Chatting> findByRoomId(Long roomId);
 }
