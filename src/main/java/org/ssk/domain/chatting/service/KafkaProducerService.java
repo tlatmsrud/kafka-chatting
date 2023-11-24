@@ -23,8 +23,8 @@ public class KafkaProducerService {
     private final static String TOPIC = "chatting";
     private final KafkaTemplate<String, ChattingRecord> customKafkaTemplate;
 
-    public void sendChattingRecord(String topic, ChattingRecord chattingRecord){
-        ListenableFuture<SendResult<String, ChattingRecord>> future = customKafkaTemplate.send(TOPIC, chattingRecord);
+    public void sendChattingRecord(Long roomId, ChattingRecord chattingRecord){
+        ListenableFuture<SendResult<String, ChattingRecord>> future = customKafkaTemplate.send(TOPIC+roomId, chattingRecord);
 
         future.addCallback(new KafkaSendCallback<>() {
 
