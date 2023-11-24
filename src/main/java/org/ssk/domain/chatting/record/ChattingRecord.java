@@ -1,7 +1,8 @@
 package org.ssk.domain.chatting.record;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  */
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChattingRecord {
 
     private String sessionId;
