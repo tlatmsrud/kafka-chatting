@@ -1,12 +1,14 @@
 package org.ssk.domain.chatting.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.ssk.domain.chatting.dto.ChattingDto;
+import org.ssk.domain.chatting.dto.ChattingRoomDto;
 import org.ssk.domain.chatting.dto.SendDto;
 import org.ssk.domain.chatting.service.ChattingService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * title        :
@@ -22,8 +24,23 @@ public class ChattingController {
 
     private final ChattingService chattingService;
 
+    @PostMapping("/room")
+    public void createChattingRoom(@RequestParam(name = "roomName") String roomName){
+        chattingService.createChattingRoom(roomName);
+    }
+
+    @GetMapping("/room")
+    public List<ChattingRoomDto> getChattingRoomList(){
+        return chattingService.getChattingRoomList();
+    }
+
     @PostMapping("/send")
-    public void send(@RequestBody SendDto sendDto){
-        chattingService.send(sendDto);
+    public void send(HttpServletRequest request, @RequestBody SendDto sendDto){
+        chattingService.send(sendDto, request.getSession().getId());
+    }
+
+    @GetMapping("/polling/{roomId}")
+    public List<ChattingDto> polling(@PathVariable("roomId") Long roomId){
+        return chattingService.getChattingListByRoomId(roomId);
     }
 }
