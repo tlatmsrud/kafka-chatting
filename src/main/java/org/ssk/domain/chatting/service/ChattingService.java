@@ -3,11 +3,13 @@ package org.ssk.domain.chatting.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.ssk.domain.chatting.domain.Chatting;
 import org.ssk.domain.chatting.domain.ChattingRoom;
 import org.ssk.domain.chatting.dto.ChattingDto;
 import org.ssk.domain.chatting.dto.ChattingRoomDto;
 import org.ssk.domain.chatting.dto.SendDto;
 import org.ssk.domain.chatting.record.ChattingRecord;
+import org.ssk.domain.chatting.repository.ChattingRepository;
 import org.ssk.domain.chatting.repository.ChattingRoomRepository;
 import org.ssk.domain.chatting.strategy.ChattingSelectStrategy;
 
@@ -29,6 +31,7 @@ public class ChattingService {
     private final KafkaProducerService kafkaProducerService;
     private final ChattingRoomRepository chattingRoomRepository;
     private final ChattingSelectStrategy chattingSelectStrategy;
+    private final ChattingRepository chattingRepository;
 
     public List<ChattingRoomDto> getChattingRoomList(){
         return chattingRoomRepository.findAll().stream()
@@ -43,16 +46,24 @@ public class ChattingService {
     public void send(SendDto sendDto, String sessionId){
         Long roomId = sendDto.getRoomId();
 
-        if(!isChattingRoom(roomId)){
-            throw new RuntimeException("room is not exists");
-        }
+        ChattingRoom findChattingRoom = findChattingRoom(roomId);
 
-        kafkaProducerService.sendChattingRecord(roomId
-                , ChattingRecord.of(sessionId, sendDto.getMessage()));
+        ChattingRecord chattingRecord = ChattingRecord.of(sessionId, sendDto.getMessage());
+        kafkaProducerService.sendChattingRecord(roomId, chattingRecord);
+
+        Chatting chatting = Chatting.builder()
+                .sessionId(sessionId)
+                .message(chattingRecord.getMessage())
+                .time(chattingRecord.getTime())
+                .roomId(findChattingRoom)
+                .build();
+
+        chattingRepository.save(chatting);
     }
 
-    public boolean isChattingRoom(Long roomId){
-        return chattingRoomRepository.existsById(roomId);
+    public ChattingRoom findChattingRoom(Long roomId){
+        return chattingRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("room is not exists"));
     }
 
     public List<ChattingDto> getChattingListByRoomId(Long roomId){

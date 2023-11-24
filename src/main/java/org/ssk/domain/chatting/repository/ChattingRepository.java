@@ -2,6 +2,7 @@ package org.ssk.domain.chatting.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.ssk.domain.chatting.domain.Chatting;
+import org.ssk.domain.chatting.domain.ChattingRoom;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
  * description  :
  */
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
-    List<Chatting> findByRoomId(Long roomId);
+    List<Chatting> findByRoomId(ChattingRoom chattingRoom);
 }
