@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            const socket = new SockJS("/ws");
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function(frame){
+                console.log("Connected : "+frame);
+                subscribe([[${roomId}]]);
+            });
+        })
+
+        function subscribe(roomId){
+            let table = $("#chattingTable");
+            stompClient.subscribe("/subscribe/"+roomId, function(response){
+                console.log("response==========")
+                let body = JSON.parse(response.body);
+
+                let row = $("<tr />").append(
+                    $("<td />").text(body.sessionId),
+                    $("<td />").text(body.message  + " " +  body.time)
+                );
+
+                table.append(row);
+            })
+        }
+
+        function sendMessage(roomId){
+
+            let data = {
+                "message" : document.getElementById('message').value
+                ,"roomId" : roomId
+            }
+
+            stompClient.send("/app-ws-method/sendMessage", {}, JSON.stringify(data))
+        }
+    </script>
+</head>
+<body>
+<div>
+  <h1 th:text="${roomName}"></h1><h1> 채팅방</h1>
+</div>
+
+<table id = "chattingTable">
+
+</table>
+<div>
+  <input type="text" id="message"/>
+  <input type="button" th:onclick="|javascript:sendMessage('${roomId}')|" value = "전송"/>
+</div>
+</body>
+</html>
