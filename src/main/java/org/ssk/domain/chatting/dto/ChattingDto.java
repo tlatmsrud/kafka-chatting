@@ -11,17 +11,29 @@ import lombok.Getter;
 
 @Getter
 public class ChattingDto {
-    private String sessionId;
-    private String message;
-    private String time;
+    private final String sessionId;
+    private final String message;
+    private final String time;
+    private final Long roomId;
 
-    private ChattingDto(String sessionId, String message, String time){
+    private ChattingDto(String sessionId, String message, String time, Long roomId){
         this.sessionId = sessionId;
         this.message = message;
         this.time = time;
+        this.roomId = roomId;
     }
 
-    public static ChattingDto of(String sessionId, String message, String time){
-        return new ChattingDto(sessionId, message, time);
+    public static ChattingDto of(String sessionId, String message, String time, Long roomId){
+        return new ChattingDto(sessionId, message, time, roomId);
+    }
+
+    @Override
+    public String toString() {
+        return "ChattingDto{" +
+                "sessionId='" + sessionId + '\'' +
+                ", message='" + message + '\'' +
+                ", time='" + time + '\'' +
+                ", roomId=" + roomId +
+                '}';
     }
 }
