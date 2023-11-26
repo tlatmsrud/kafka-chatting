@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>채팅방 리스트</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
+<script>
+    function makeChattingRoom(){
+        var roomName = document.getElementById('roomName').value;
+
+        if(roomName.length == 0){
+            alert("room name is empty")
+            return
+        }
+        $.ajax({
+            url: "/api/chat/room",
+            type:'POST',
+            data: {
+                'roomName' : roomName
+            },
+            success: function(response){
+                console.log('created room :', response)
+                location.reload();
+            },
+            error: function(error){
+                alert("Error: "+ error);
+            }
+        })
+    }
+</script>
 <h1>채팅방 리스트</h1>
+<div>
+    <input type = "text" id="roomName" placeholder="생성할 채팅방 이름을 입력하세요"/>
+    <button type = "button" onclick="makeChattingRoom()">채팅방 생성</button>
+</div>
 <table>
     <tr th:each="roomInfo : ${list}">
         <td th:text="${roomInfo.roomId}"></td>
