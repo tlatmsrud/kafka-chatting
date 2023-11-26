@@ -58,11 +58,4 @@ public class ChattingController {
         model.addAttribute("roomName", roomName);
         return "chatting";
     }
-
-
-    @ResponseBody
-    @GetMapping("/polling/{roomId}")
-    public  List<ChattingDto> polling(@PathVariable("roomId") Long roomId){
-        return chattingService.getChattingListByRoomId(roomId);
-    }
 }

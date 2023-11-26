@@ -18,13 +18,13 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/polling")
+@RequestMapping("/api/polling")
 @RequiredArgsConstructor
 public class PollingChattingController {
 
     private final ChattingService chattingService;
 
-    @GetMapping("/chatting/{roomId}")
+    @GetMapping("/{roomId}")
     public List<ChattingDto> getChatting(@PathVariable Long roomId){
         return chattingService.getChattingListByRoomId(roomId);
     }

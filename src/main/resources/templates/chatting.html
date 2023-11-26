@@ -10,7 +10,7 @@
             setInterval(function(){
                 $.ajax({
                     cache : false,
-                    url : "/api/chat/polling/"+[[${roomId}]],
+                    url : "api/polling/"+[[${roomId}]],
                     success:function(data){
                         const table = $("#chattingTable");
                         table.empty();
