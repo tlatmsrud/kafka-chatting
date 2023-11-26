@@ -33,29 +33,37 @@ public class ChattingService {
     private final ChattingSelectStrategy chattingSelectStrategy;
     private final ChattingRepository chattingRepository;
 
+    /**
+     * 채팅방 리스트 조회
+     * @return 채팅방 리스트
+     */
     public List<ChattingRoomDto> getChattingRoomList(){
         return chattingRoomRepository.findAll().stream()
                 .map(entity -> ChattingRoomDto.of(entity.getRoomId(), entity.getRoomName()))
                 .collect(Collectors.toList());
     }
-    public void createChattingRoom(String chattingRoomName){
+
+    /**
+     * 채팅방 생성
+     * @param chattingRoomName - 채팅방 이름
+     * @return 생성된 채팅방 ID
+     */
+    public Long createChattingRoom(String chattingRoomName){
         ChattingRoom chattingRoom = ChattingRoom.builder().roomName(chattingRoomName).build();
-        chattingRoomRepository.save(chattingRoom);
-        log.info("created chatting room : "+ chattingRoomName);
+        return chattingRoomRepository.save(chattingRoom).getRoomId();
     }
     public void send(SendDto sendDto, String sessionId){
         Long roomId = sendDto.getRoomId();
-
         ChattingRoom findChattingRoom = findChattingRoom(roomId);
 
-        ChattingRecord chattingRecord = ChattingRecord.of(sessionId, sendDto.getMessage());
-        kafkaProducerService.sendChattingRecord(roomId, chattingRecord);
+        ChattingRecord chattingRecord = ChattingRecord.of(sessionId, sendDto.getMessage(), roomId);
+        kafkaProducerService.sendChattingRecord(chattingRecord);
 
         Chatting chatting = Chatting.builder()
                 .sessionId(sessionId)
                 .message(chattingRecord.getMessage())
                 .time(chattingRecord.getTime())
-                .roomId(findChattingRoom)
+                .chattingRoom(findChattingRoom)
                 .build();
 
         chattingRepository.save(chatting);

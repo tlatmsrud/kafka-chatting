@@ -25,7 +25,7 @@ public class Chatting {
 
     @ManyToOne
     @JoinColumn(name = "roomId")
-    private ChattingRoom roomId;
+    private ChattingRoom chattingRoom;
     private String sessionId;
     private String message;
     private String time;

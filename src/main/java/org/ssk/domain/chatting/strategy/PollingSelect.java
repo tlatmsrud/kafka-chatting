@@ -29,8 +29,8 @@ public class PollingSelect implements ChattingSelectStrategy{
         ChattingRoom findChattingRoom = chattingRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("room is not exists"));
 
-        return chattingRepository.findByRoomId(findChattingRoom)
-                .stream().map(entity -> ChattingDto.of(entity.getSessionId(), entity.getMessage(), entity.getTime()))
+        return chattingRepository.findByChattingRoom(findChattingRoom)
+                .stream().map(entity -> ChattingDto.of(entity.getSessionId(), entity.getMessage(), entity.getTime(), entity.getChattingRoom().getRoomId()))
                 .collect(Collectors.toList());
     }
 }

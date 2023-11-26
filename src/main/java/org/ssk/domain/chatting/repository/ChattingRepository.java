@@ -13,5 +13,5 @@ import java.util.List;
  * description  :
  */
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
-    List<Chatting> findByRoomId(ChattingRoom chattingRoom);
+    List<Chatting> findByChattingRoom(ChattingRoom chattingRoom);
 }
