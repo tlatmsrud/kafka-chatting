@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅방</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+            setInterval(function(){
+                $.ajax({
+                    cache : false,
+                    url : "/api/chat/polling/"+[[${roomId}]],
+                    success:function(data){
+                        const table = $("#chattingTable");
+                        table.empty();
+
+                        for(const i in data){
+                            const sessionId = data[i].sessionId
+                            const message = data[i].message
+                            const time = data[i].time
+
+                            const row = $("<tr />").append(
+                                $("<td />").text(sessionId),
+                                $("<td />").text(message + " " + time)
+                            );
+                            table.append(row);
+                        }
+
+                    }
+
+                })
+            },1000)
+        });
+
+    </script>
+</head>
+<body>
+
+<h1>채팅방</h1>
+<table id = "chattingTable">
+
+</table>
+<div>
+</div>
+</body>
+</html>
