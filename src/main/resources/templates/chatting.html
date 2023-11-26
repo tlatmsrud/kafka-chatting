@@ -33,15 +33,39 @@
             },1000)
         });
 
+        function sendMessage(roomId){
+
+            const data = {
+                "message" : document.getElementById('message').value
+                ,"roomId" : roomId
+            }
+            $.ajax({
+                url: "/api/chat/send",
+                type:'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(){
+                    console.log('Message sent :', data.message)
+                },
+                error: function(error){
+                    alert("Error: "+ error);
+                }
+            })
+        }
+
     </script>
 </head>
 <body>
+<div>
+    <h1 th:text="${roomName}"></h1><h1> 채팅방</h1>
+</div>
 
-<h1>채팅방</h1>
 <table id = "chattingTable">
 
 </table>
 <div>
+    <input type="text" id="message"/>
+    <input type="button" th:onclick="|javascript:sendMessage('${roomId}')|" value = "전송"/>
 </div>
 </body>
 </html>
