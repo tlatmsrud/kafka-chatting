@@ -69,4 +69,10 @@ public class ChattingService {
     public List<ChattingDto> getChattingListByRoomId(Long roomId){
         return chattingSelectStrategy.selectChattingByRoomId(roomId);
     }
+
+    public String getRoomName(Long roomId) {
+        return chattingRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("room is not exists"))
+                .getRoomName();
+    }
 }

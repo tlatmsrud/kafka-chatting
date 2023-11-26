@@ -53,7 +53,9 @@ public class ChattingController {
 
     @GetMapping("/room/enter/{roomId}")
     public String enterRoom(Model model, @PathVariable("roomId") Long roomId){
+        String roomName = chattingService.getRoomName(roomId);
         model.addAttribute("roomId", roomId);
+        model.addAttribute("roomName", roomName);
         return "chatting";
     }
 
