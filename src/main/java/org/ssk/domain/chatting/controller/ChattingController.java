@@ -4,12 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.ssk.domain.chatting.dto.ChattingDto;
 import org.ssk.domain.chatting.dto.ChattingRoomDto;
-import org.ssk.domain.chatting.dto.SendDto;
 import org.ssk.domain.chatting.service.ChattingService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -26,17 +23,21 @@ public class ChattingController {
 
     private final ChattingService chattingService;
 
-    @GetMapping
-    public String getMainPage(){
-        return "main";
-    }
-
+    /**
+     * 채팅방 생성
+     * @param roomName - 채팅방 이름
+     */
     @ResponseBody
     @PostMapping("/room")
-    public void createChattingRoom(@RequestParam(name = "roomName") String roomName){
-        chattingService.createChattingRoom(roomName);
+    public Long createChattingRoom(@RequestParam(name = "roomName") String roomName){
+        return chattingService.createChattingRoom(roomName);
     }
 
+    /**
+     * 채팅방 리스트 조회
+     * @param model - SSR에 대한 Model
+     * @return view 이름
+     */
     @GetMapping("/room")
     public String getChattingRoomList(Model model){
 
@@ -45,12 +46,12 @@ public class ChattingController {
         return "chattingRoomList";
     }
 
-    @ResponseBody
-    @PostMapping("/send")
-    public void send(HttpServletRequest request, @RequestBody SendDto sendDto){
-        chattingService.send(sendDto, request.getSession().getId());
-    }
-
+    /**
+     * 채팅방 입장
+     * @param model - SSR에 대한 View
+     * @param roomId - 채팅방 ID
+     * @return view 이름ㄱ
+     */
     @GetMapping("/room/enter/{roomId}")
     public String enterRoom(Model model, @PathVariable("roomId") Long roomId){
         String roomName = chattingService.getRoomName(roomId);
