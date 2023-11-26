@@ -20,13 +20,15 @@ public class ChattingRecord {
     private String sessionId;
     private String message;
     private String time = LocalDateTime.now().toString();
+    private Long roomId;
 
-    private ChattingRecord(String sessionId, String message){
+    private ChattingRecord(String sessionId, String message, Long roomId){
         this.sessionId = sessionId;
         this.message = message;
+        this.roomId = roomId;
     }
 
-    public static ChattingRecord of(String sessionId, String message){
-        return new ChattingRecord(sessionId, message);
+    public static ChattingRecord of(String sessionId, String message, Long roomId){
+        return new ChattingRecord(sessionId, message, roomId);
     }
 }
