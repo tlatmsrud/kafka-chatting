@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * title        :
+ * title        : Polling 조회 전략 클래스
  * author       : sim
  * date         : 2023-11-24
  * description  :
@@ -30,7 +30,7 @@ public class PollingSelect implements ChattingSelectStrategy{
                 .orElseThrow(() -> new RuntimeException("room is not exists"));
 
         return chattingRepository.findByChattingRoom(findChattingRoom)
-                .stream().map(entity -> ChattingDto.of(entity.getSessionId(), entity.getMessage(), entity.getTime(), entity.getChattingRoom().getRoomId()))
+                .stream().map(entity -> ChattingDto.of(entity.getNickname(), entity.getMessage(), entity.getTime(), entity.getChattingRoom().getRoomId()))
                 .collect(Collectors.toList());
     }
 }
