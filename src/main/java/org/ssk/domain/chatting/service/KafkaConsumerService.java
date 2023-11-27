@@ -24,9 +24,6 @@ public class KafkaConsumerService {
     @KafkaListener(
             topics = TOPIC, groupId = "chatting", containerFactory = "customContainerFactory")
     public void customListener(ChattingRecord chattingRecord){
-        System.out.println("recordListener");
-        System.out.println(chattingRecord.getSessionId());
-        System.out.println(chattingRecord.getRoomId());
 
         // 카프카가 TOPIC 데이터를 poll 받아온 후 messagingTemplate을 통해 /subscribe/{roomId}를 구독한 클라이언트로 메시지를 발송한다.
         messagingTemplate.convertAndSend("/subscribe/"+chattingRecord.getRoomId(),
