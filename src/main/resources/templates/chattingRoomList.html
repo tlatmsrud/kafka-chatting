@@ -4,16 +4,109 @@
     <meta charset="UTF-8">
     <title>채팅방 리스트</title>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+    <style>
+        body {
+            text-align: center;
+            background-color: cornflowerblue;
+        }
+        #title{
+            font-size: 50px;
+            color: white;
+            text-shadow: 2px 2px 0 black;
+        }
+
+        #roomName {
+            border : 0px;
+            border-radius: 10px 10px;
+            width: 25vw;
+            height: 4vw;
+            font-size: 20px;
+            box-shadow: 2px 2px black;
+        }
+
+
+        #roomName::placeholder{
+            text-align: center;
+        }
+
+        #room-create-btn {
+            border : 0px;
+            border-radius: 10px 10px;
+            width: fit-content;
+            height: 4.3vw;
+            box-shadow: 2px 2px black;
+            background-color: white;
+            font-size: 20px;
+        }
+
+        #create-div{
+            display: flex;
+            gap:8px;
+            justify-content: center;
+            align-content: center;
+        }
+        .chat-list {
+            list-style: none;
+            top-margin: 20px;
+            padding: 0;
+            padding: 0 16px;
+        }
+
+        .chat-room {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            margin: 0px auto 8px;
+            height: 32px;
+            border-radius: 8px;
+            box-shadow: 2px 2px black;
+            width: 50%;
+        }
+
+        .chat-name {
+            font-weight: 700;
+            min-width: 256px;
+            text-align: left;
+            margin-left: 10px;
+            color: black;
+
+        }
+
+        .enter-button {
+            width: 48px;
+            height: 32px;
+            color: #ffffff;
+            background-color: #686de0;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .enter-button:hover {
+            background-color: #685de3;
+        }
+
+        .hide {
+            visibility: hidden;
+        }
+    </style>
 </head>
 <body>
-<script>
-    function makeChattingRoom(){
-        var roomName = document.getElementById('roomName').value;
 
-        if(roomName.length == 0){
-            alert("room name is empty")
-            return
+<script>
+    function chattingRoomValidation(roomName){
+        return roomName.length == 0
+    }
+    function makeChattingRoom(){
+        let roomName = document.getElementById('roomName').value;
+
+        if(chattingRoomValidation(roomName)){
+            alert("room name is empty");
+            return;
         }
+
         $.ajax({
             url: "/api/chat/room",
             type:'POST',
@@ -21,26 +114,56 @@
                 'roomName' : roomName
             },
             success: function(response){
-                console.log('created room :', response)
-                location.reload();
+                console.log('created room :' + response)
+                let ul = $(".chat-list");
+
+                let li =document.createElement("li");
+                li.setAttribute("class","chat-room")
+
+                let p = document.createElement("p");
+                p.setAttribute("class","chat-name");
+                p.innerText = roomName;
+
+                let button = document.createElement("button");
+                button.setAttribute("class", "enter-button");
+                button.value = response
+                button.innerText = "입장";
+
+                li.append(p);
+                li.append(button);
+                ul.append(li);
             },
             error: function(error){
                 alert("Error: "+ error);
             }
         })
     }
+
+    $(document).on("click", ".enter-button", function(){
+        let roomId = $(this).val();
+        if(localStorage.getItem("method") == "ws"){
+            location.href = "/stomp/enterChattingRoom/"+roomId;
+        }else{
+            location.href = "/api/chat/room/enter/"+roomId;
+        }
+    })
+
 </script>
-<h1>채팅방 리스트</h1>
 <div>
-    <input type = "text" id="roomName" placeholder="생성할 채팅방 이름을 입력하세요"/>
-    <button type = "button" onclick="makeChattingRoom()">채팅방 생성</button>
+    <h1 id = "title">채팅방 리스트</h1>
 </div>
-<table>
-    <tr th:each="roomInfo : ${list}">
-        <td th:text="${roomInfo.roomId}"></td>
-        <td th:text="${roomInfo.roomName}"></td>
-        <td><a th:href="@{/api/chat/room/enter/{roomId}(roomId = ${roomInfo.roomId})}">Enter</a></td>
-    </tr>
-</table>
+
+<div id = "create-div">
+    <div id = "roomName-div">
+        <input type = "text" id="roomName" placeholder="생성할 채팅방 이름"/>
+    </div>
+    <button type = "button" id ="room-create-btn" onclick="makeChattingRoom()">생성</button>
+</div>
+<ul class="chat-list">
+    <li class = "chat-room" th:each="roomInfo : ${list}">
+        <p class = "chat-name" th:text = "${roomInfo.roomName}"></p>
+        <button class = "enter-button" th:value="${roomInfo.roomId}">입장</button>
+    </li>
+</ul>
 </body>
 </html>
