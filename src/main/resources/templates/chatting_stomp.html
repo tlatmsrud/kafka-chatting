@@ -183,6 +183,9 @@
             li.append(username_p);
             li.append(message_div);
             ul.append(li);
+
+            let scrollPoint = document.querySelector('.chat-list').scrollHeight;
+            $(".chat-list").scrollTop(scrollPoint);
         }
 
         function sendMessage(){
