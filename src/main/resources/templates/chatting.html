@@ -2,8 +2,103 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>채팅방</title>
+    <title>Title</title>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            background-color: cornflowerblue;
+        }
+
+        .title{
+            font-size: 50px;
+            color: white;
+            text-shadow: 2px 2px 0 black;
+            height: 50px;
+            margin: 0px auto;
+        }
+
+        .footer{
+            position : fixed;
+            bottom : 0;
+            width: 100vw;
+            height: 15vh;
+        }
+
+        .input-div{
+            vertical-align: middle;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+        }
+        .input-text{
+            width: 60vw;
+            height: 10vh;
+            border: 0;
+            border-radius: 10px;
+            box-shadow: 2px 2px black;
+            min-width: 100px;
+            margin-right: 5px;
+            font-size: 20px;
+        }
+
+        .input-btn{
+            width: 10vw;
+            height: 10.5vh;
+            background-color: #686de0;
+            border: 0px;
+            border-radius: 10px;
+            box-shadow: 2px 2px black;
+            color: white;
+            font-size: 20px;
+            min-width: 60px;
+        }
+
+        .input-btn:hover{
+            background-color: #685de3;
+        }
+
+        .chat-list{
+            list-style: none;
+            padding: 5px 0px;
+            overflow: auto;
+            height: 70vh;
+        }
+
+        .my-chat-row{
+            text-align: left;
+            margin-right: auto;
+            min-width: 30vw;
+            width: 30vw;
+        }
+        .other-chat-row{
+            text-align: right;
+            margin-left: auto;
+            min-width: 30vw;
+            width: 30vw;
+        }
+        .message{
+            background-color: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 2px 2px black;
+            max-width: 200px;
+            width: fit-content;
+            margin: 0px 0px 10px 0px;
+        }
+        .time{
+            font-size: 12px;
+            color: black;
+        }
+        .user-name{
+            margin-bottom: 3px;
+            margin-top: 0px;
+        }
+
+
+    </style>
     <script>
 
         const nickname = localStorage.getItem("nickname");
@@ -14,27 +109,60 @@
                 $.ajax({
                     cache : false,
                     url : "/polling/"+roomId,
-                    success:function(data){
-                        let table = $("#chattingTable");
-                        table.empty();
-
-                        for(let i in data){
-                            let message = data[i].message;
-                            let time = data[i].time;
-                            let sendNickname = data[i].nickname;
-
-                            let row = $("<tr />").append(
-                                $("<td />").text(sendNickname),
-                                $("<td />").text(message  + " " +  time)
-                            );
-                            table.append(row);
-                        }
-
+                    success:function(response){
+                        appendChatting(response)
                     }
 
                 })
             },1000)
         });
+
+        function timeFormat(time){
+            let yyyy = time.substring(0,4);
+            let mm = time.substring(4,6);
+            let dd = time.substring(6,8);
+            let hh = time.substring(8,10);
+            let mi = time.substring(10,12);
+            let ss = time.substring(12,14);
+
+            return yyyy+"-"+mm+"-"+dd+" "+hh+":"+mi+":"+ss;
+
+        }
+        function appendChatting(response) {
+            let ul = $(".chat-list");
+            ul.empty();
+
+            for (let i in response) {
+                let message = response[i].message;
+                let time = response[i].time;
+                let sendNickname = response[i].nickname;
+
+                let li = document.createElement("li");
+
+                if (sendNickname === nickname) {
+                    li.className = "my-chat-row"
+                } else {
+                    li.className = "other-chat-row"
+                }
+
+                let username_p = document.createElement("p");
+                username_p.className = "user-name";
+                username_p.innerText = sendNickname + " "
+
+                let span = document.createElement("span");
+                span.className = "time";
+                span.innerText = timeFormat(time);
+
+                let message_p = document.createElement("p");
+                message_p.className = "message";
+                message_p.innerText = message;
+
+                username_p.append(span);
+                li.append(username_p);
+                li.append(message_p);
+                ul.append(li);
+            }
+        }
 
         function sendMessage(){
 
@@ -43,6 +171,7 @@
                 ,"roomId" : roomId
                 ,"nickname" : nickname
             }
+
             $.ajax({
                 url: "/polling/send",
                 type:'POST',
@@ -56,20 +185,22 @@
                 }
             })
         }
-
     </script>
 </head>
 <body>
 <div>
-    <h1 th:text="${roomName}"></h1><h1> 채팅방</h1>
+    <h1 class = "title" th:text="${roomName}+' 채팅방'"></h1>
 </div>
 
-<table id = "chattingTable">
+<ul class="chat-list">
+</ul>
 
-</table>
-<div>
-    <input type="text" id="message"/>
-    <input type="button" onclick="sendMessage()" value = "전송"/>
+<div class = footer>
+    <div class = "input-div">
+        <textarea class = "input-text" id="message"></textarea>
+        <input class = "input-btn" type="button" onclick="sendMessage()" value = "보내기"/>
+    </div>
 </div>
+
 </body>
 </html>
