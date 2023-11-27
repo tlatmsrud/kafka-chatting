@@ -126,6 +126,11 @@
                 return;
             }
 
+            if(nickname.length == 0 || nickname == ""){
+                alert("닉네임을 입력해주세요");
+                return;
+            }
+
             let request = {
                 "nickname" : nickname
             }
@@ -150,7 +155,7 @@
         <p id = "sub-title">feat. Kafka</p>
     </div>
 
-    <img id="logo" src ="../static/images/logo.svg">
+    <img id="logo" src ="images/logo.svg">
     <div class = "radio_div">
         <label for ="polling" class ="radio_box">
             <input type="radio" id="polling" name = "method" value= "polling">
