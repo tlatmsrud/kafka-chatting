@@ -10,7 +10,7 @@ import org.ssk.domain.chatting.service.ChattingService;
 import java.util.List;
 
 /**
- * title        :
+ * title        : 채팅 컨트롤러
  * author       : sim
  * date         : 2023-11-23
  * description  :
@@ -50,7 +50,7 @@ public class ChattingController {
      * 채팅방 입장
      * @param model - SSR에 대한 View
      * @param roomId - 채팅방 ID
-     * @return view 이름ㄱ
+     * @return view 이름
      */
     @GetMapping("/room/enter/{roomId}")
     public String enterRoom(Model model, @PathVariable("roomId") Long roomId){
