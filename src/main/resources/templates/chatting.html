@@ -6,23 +6,26 @@
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script>
 
+        const nickname = localStorage.getItem("nickname");
+        const roomId = [[${roomId}]]
+
         $(document).ready(function(){
             setInterval(function(){
                 $.ajax({
                     cache : false,
-                    url : "api/polling/"+[[${roomId}]],
+                    url : "/polling/"+roomId,
                     success:function(data){
-                        const table = $("#chattingTable");
+                        let table = $("#chattingTable");
                         table.empty();
 
-                        for(const i in data){
-                            const sessionId = data[i].sessionId
-                            const message = data[i].message
-                            const time = data[i].time
+                        for(let i in data){
+                            let message = data[i].message;
+                            let time = data[i].time;
+                            let sendNickname = data[i].nickname;
 
-                            const row = $("<tr />").append(
-                                $("<td />").text(sessionId),
-                                $("<td />").text(message + " " + time)
+                            let row = $("<tr />").append(
+                                $("<td />").text(sendNickname),
+                                $("<td />").text(message  + " " +  time)
                             );
                             table.append(row);
                         }
@@ -33,14 +36,15 @@
             },1000)
         });
 
-        function sendMessage(roomId){
+        function sendMessage(){
 
             const data = {
                 "message" : document.getElementById('message').value
                 ,"roomId" : roomId
+                ,"nickname" : nickname
             }
             $.ajax({
-                url: "api/polling/send",
+                url: "/polling/send",
                 type:'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
@@ -65,7 +69,7 @@
 </table>
 <div>
     <input type="text" id="message"/>
-    <input type="button" th:onclick="|javascript:sendMessage('${roomId}')|" value = "전송"/>
+    <input type="button" onclick="sendMessage()" value = "전송"/>
 </div>
 </body>
 </html>
