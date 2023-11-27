@@ -12,6 +12,7 @@ import org.ssk.domain.chatting.record.ChattingRecord;
 import org.ssk.domain.chatting.repository.ChattingRepository;
 import org.ssk.domain.chatting.repository.ChattingRoomRepository;
 import org.ssk.domain.chatting.strategy.ChattingSelectStrategy;
+import org.ssk.global.util.TimeUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,27 +53,34 @@ public class ChattingService {
         ChattingRoom chattingRoom = ChattingRoom.builder().roomName(chattingRoomName).build();
         return chattingRoomRepository.save(chattingRoom).getRoomId();
     }
-    public void send(SendDto sendDto, String sessionId){
-        Long roomId = sendDto.getRoomId();
-        ChattingRoom findChattingRoom = findChattingRoom(roomId);
 
-        ChattingRecord chattingRecord = ChattingRecord.of(sessionId, sendDto.getMessage(), roomId);
+    /**
+     * 채팅 발송
+     * @param sendDto - 발송할 채팅 Dto
+     */
+    public void send(SendDto sendDto){
+        Long roomId = sendDto.getRoomId();
+        String message = sendDto.getMessage();
+        String nickname = sendDto.getNickname();
+        String time = TimeUtil.getCurrentTime();
+
+        ChattingRoom findChattingRoom = chattingRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("room is not exists"));
+
+        ChattingRecord chattingRecord = ChattingRecord.of(nickname, message, roomId, time);
+
         kafkaProducerService.sendChattingRecord(chattingRecord);
 
         Chatting chatting = Chatting.builder()
-                .sessionId(sessionId)
-                .message(chattingRecord.getMessage())
-                .time(chattingRecord.getTime())
+                .nickname(nickname)
+                .message(message)
+                .time(time)
                 .chattingRoom(findChattingRoom)
                 .build();
 
         chattingRepository.save(chatting);
     }
 
-    public ChattingRoom findChattingRoom(Long roomId){
-        return chattingRoomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("room is not exists"));
-    }
 
     public List<ChattingDto> getChattingListByRoomId(Long roomId){
         return chattingSelectStrategy.selectChattingByRoomId(roomId);
