@@ -76,17 +76,35 @@
             text-align: right;
             margin-left: auto;
             min-width: 30vw;
-            width: 30vw;
+            padding-right: 10px;
         }
+
+        .other-chat-row .message-row{
+            max-width: 200px;
+            height: 30px;
+            width: fit-content;
+            height: fit-content;
+            margin-left: auto;
+        }
+
+        .my-chat-row .message-row{
+            max-width: 200px;
+            height: fit-content;
+            width: fit-content;
+            margin-right: auto;
+        }
+
         .message{
             background-color: white;
             border-radius: 10px;
-            padding: 5px;
             box-shadow: 2px 2px black;
             max-width: 200px;
             width: fit-content;
+            padding: 3px 10px;
+            text-align: left;
             margin: 0px 0px 10px 0px;
         }
+
         .time{
             font-size: 12px;
             color: black;
@@ -153,13 +171,17 @@
             span.className = "time";
             span.innerText = timeFormat(body.time);
 
+            let message_div = document.createElement("div");
+            message_div.className = "message-row";
+
             let message_p = document.createElement("p");
             message_p.className = "message";
             message_p.innerText = body.message;
 
             username_p.append(span);
+            message_div.append(message_p);
             li.append(username_p);
-            li.append(message_p);
+            li.append(message_div);
             ul.append(li);
         }
 
