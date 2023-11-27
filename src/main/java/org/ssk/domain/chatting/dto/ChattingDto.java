@@ -3,7 +3,7 @@ package org.ssk.domain.chatting.dto;
 import lombok.Getter;
 
 /**
- * title        :
+ * title        : 채팅 DTO
  * author       : sim
  * date         : 2023-11-24
  * description  :
@@ -11,26 +11,26 @@ import lombok.Getter;
 
 @Getter
 public class ChattingDto {
-    private final String sessionId;
+    private final String nickname;
     private final String message;
     private final String time;
     private final Long roomId;
 
-    private ChattingDto(String sessionId, String message, String time, Long roomId){
-        this.sessionId = sessionId;
+    private ChattingDto(String nickname, String message, String time, Long roomId){
+        this.nickname = nickname;
         this.message = message;
         this.time = time;
         this.roomId = roomId;
     }
 
-    public static ChattingDto of(String sessionId, String message, String time, Long roomId){
-        return new ChattingDto(sessionId, message, time, roomId);
+    public static ChattingDto of(String nickname, String message, String time, Long roomId){
+        return new ChattingDto(nickname, message, time, roomId);
     }
 
     @Override
     public String toString() {
         return "ChattingDto{" +
-                "sessionId='" + sessionId + '\'' +
+                "sessionId='" + nickname + '\'' +
                 ", message='" + message + '\'' +
                 ", time='" + time + '\'' +
                 ", roomId=" + roomId +

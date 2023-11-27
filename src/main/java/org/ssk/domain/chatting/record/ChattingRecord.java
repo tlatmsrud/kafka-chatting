@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 /**
  * title        :
@@ -17,18 +16,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChattingRecord {
 
-    private String sessionId;
+    private String nickname;
     private String message;
-    private String time = LocalDateTime.now().toString();
+    private String time;
     private Long roomId;
 
-    private ChattingRecord(String sessionId, String message, Long roomId){
-        this.sessionId = sessionId;
+    private ChattingRecord(String nickname, String message, Long roomId, String time){
+        this.nickname = nickname;
         this.message = message;
         this.roomId = roomId;
+        this.time = time;
     }
 
-    public static ChattingRecord of(String sessionId, String message, Long roomId){
-        return new ChattingRecord(sessionId, message, roomId);
+    public static ChattingRecord of(String nickname, String message, Long roomId, String time){
+        return new ChattingRecord(nickname, message, roomId, time);
     }
 }
