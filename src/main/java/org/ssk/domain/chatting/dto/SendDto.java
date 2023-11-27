@@ -12,6 +12,7 @@ import lombok.Getter;
 @Getter
 public class SendDto {
 
+    private String nickname;
     private Long roomId;
     private String message;
 }
