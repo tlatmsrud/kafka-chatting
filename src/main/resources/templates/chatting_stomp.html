@@ -7,36 +7,46 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script>
+
+        const nickname = localStorage.getItem("nickname");
+        const roomId = [[${roomId}]]
+
+        // 웹소켓 Connect
         $(document).ready(function(){
             const socket = new SockJS("/ws");
             stompClient = Stomp.over(socket);
 
             stompClient.connect({}, function(frame){
                 console.log("Connected : "+frame);
-                subscribe([[${roomId}]]);
+                subscribe();
             });
         })
 
-        function subscribe(roomId){
-            let table = $("#chattingTable");
+        // 웹소켓 브로커 구독
+        function subscribe(){
             stompClient.subscribe("/subscribe/"+roomId, function(response){
-                console.log("response==========")
-                let body = JSON.parse(response.body);
-
-                let row = $("<tr />").append(
-                    $("<td />").text(body.sessionId),
-                    $("<td />").text(body.message  + " " +  body.time)
-                );
-
-                table.append(row);
+                console.log("receive message !! : "+response);
+                appendChatting(response)
             })
         }
 
-        function sendMessage(roomId){
+        function appendChatting(response){
+            let table = $("#chattingTable");
+            let body = JSON.parse(response.body);
+
+            let row = $("<tr />").append(
+                $("<td />").text(body.nickname),
+                $("<td />").text(body.message  + " " +  body.time)
+            );
+            table.append(row);
+        }
+
+        function sendMessage(){
 
             let data = {
                 "message" : document.getElementById('message').value
                 ,"roomId" : roomId
+                ,"nickname" : nickname
             }
 
             stompClient.send("/app-ws-method/sendMessage", {}, JSON.stringify(data))
@@ -53,7 +63,7 @@
 </table>
 <div>
   <input type="text" id="message"/>
-  <input type="button" th:onclick="|javascript:sendMessage('${roomId}')|" value = "전송"/>
+  <input type="button" onclick="sendMessage()" value = "전송"/>
 </div>
 </body>
 </html>
