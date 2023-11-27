@@ -2,20 +2,175 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <title>Main</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: cornflowerblue;
+        }
+        #logo {
+            width: 300px;
+            height: 300px;
+            margin: 0px auto;
+            border-radius: 50%;
+        }
+        #nickname-div {
+            margin:0 auto;
+            padding: 10px;
+            border : 0px;
+            border-radius: 10px 10px;
+            width: 20vw;
+        }
+
+        #nickname {
+            padding: 10px;
+            border : 0px;
+            border-radius: 10px 10px;
+            width: 18vw;
+            font-size: 20px;
+            box-shadow: 2px 2px black;
+        }
+
+        #nickname::placeholder {
+            text-align: center;
+        }
+
+        #title{
+            font-size: 50px;
+            color: white;
+            margin-bottom: -20px;
+            text-shadow: 2px 2px 0 black;
+        }
+        #sub-title{
+            font-size: large;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 0 black;
+        }
+
+        #enter-button {
+            border : 0px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px 10px;
+            background-color: white;
+            width: 20vw;
+            box-shadow: 2px 2px black;
+        }
+
+        .radio_div{
+            margin-bottom: 20px;
+        }
+        .radio_box {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            position: relative;
+            padding-left: 25px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .radio_box input[type="radio"] {
+            display: none;
+        }
+
+        .on {
+            width: 20px; height: 20px; background: #ddd; border-radius: 50%; position: absolute; top: 0; left: 0;
+        }
+
+        /* 선택된 라디오 버튼 스타일 꾸미기 */
+        .radio_box input[type="radio"]:checked + .on {
+            background: blue;
+        }
+
+        .on:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .radio_box input[type="radio"]:checked + .on:after {
+            display: block;
+        }
+        .on:after {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            left: 5px; top: 5px; }
+
+
+    </style>
+    <script>
+        function join(){
+
+            let methodCheckYn = $("input[name=method]").is(":checked");
+            let methodVal = $("input[name=method]:checked").val();
+            let nickname = $("#nickname").val();
+            console.log(methodCheckYn);
+            if(!methodCheckYn){
+                alert("채팅방 형식을 선택해주세요");
+                return;
+            }
+
+            let request = {
+                "nickname" : nickname
+            }
+
+            $.ajax({
+                url:'/main/join',
+                type:'POST',
+                data:request,
+                success:function(){
+                    console.log("join complete");
+                    localStorage.setItem("method", methodVal)
+                    localStorage.setItem("nickname", nickname)
+                    location.href = "/api/chat/room";
+                }
+            })
+        }
+    </script>
 </head>
 <body>
-<script>
+    <div>
+        <h1 id = "title">익명 채팅방</h1>
+        <p id = "sub-title">feat. Kafka</p>
+    </div>
 
-</script>
-<div class ="main">
+    <img id="logo" src ="../static/images/logo.svg">
+    <div class = "radio_div">
+        <label for ="polling" class ="radio_box">
+            <input type="radio" id="polling" name = "method" value= "polling">
+            <span class = "on"></span>
+            Polling
+        </label>
 
-  <div class = "logo">
-    <h2>익명 채팅방</h2>
-  </div>
-  <div class = "enter">
-    <a th:href="@{/api/chat/room}">입장하기</a>
-  </div>
-</div>
+        <label for ="websocket" class ="radio_box">
+            <input type="radio" id="websocket" name = "method" value= "ws">
+            <span class = "on"></span>
+            WebSocket
+        </label>
+    </div>
+    <div id = "nickname-div">
+        <input type="text" id="nickname" name = "nickname" placeholder="닉네임 입력"/>
+    </div>
+
+    <div>
+        <button id = "enter-button" type = "button" onclick = "join()">입장</button>
+    </div>
+
 </body>
 </html>
