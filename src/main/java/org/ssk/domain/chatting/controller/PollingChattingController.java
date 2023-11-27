@@ -6,18 +6,17 @@ import org.ssk.domain.chatting.dto.ChattingDto;
 import org.ssk.domain.chatting.dto.SendDto;
 import org.ssk.domain.chatting.service.ChattingService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * title        :
+ * title        : Polling 채팅 Controller
  * author       : sim
  * date         : 2023-11-24
  * description  :
  */
 
 @RestController
-@RequestMapping("/api/polling")
+@RequestMapping("/polling")
 @RequiredArgsConstructor
 public class PollingChattingController {
 
@@ -25,13 +24,12 @@ public class PollingChattingController {
 
     /**
      * 채팅 입력
-     * @param request - HttpServletRequest
      * @param sendDto - 발송할 채팅 Dto
      */
     @ResponseBody
     @PostMapping("/send")
-    public void send(HttpServletRequest request, @RequestBody SendDto sendDto){
-        chattingService.send(sendDto, request.getSession().getId());
+    public void send(@RequestBody SendDto sendDto){
+        chattingService.send(sendDto);
     }
 
     /**
