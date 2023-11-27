@@ -38,6 +38,6 @@ public class STOMPController {
     @MessageMapping("/sendMessage")
     public void sendMessage(SendDto sendDto){
         log.info("chattingDto : "+ sendDto.toString());
-        chattingService.send(sendDto, "test");
+        chattingService.send(sendDto);
     }
 }
