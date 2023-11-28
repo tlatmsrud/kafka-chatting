@@ -34,31 +34,20 @@ Kafka를 활용한 채팅 어플리케이션
 
 ## 3.3. 카프카를 활용하라
 
+> 로컬에서 Apache Zookeeper과 함께 Kafka 사용하였습니다. 카프카 브로커는 테스트 목적에 맞게 하나만 구성하였습니다.
+
+## 3.4. Polling 방식으로 실시간 채팅 기능을 구현하라
+<img src="https://github.com/tlatmsrud/kafka-chatting/assets/9374562/b1ae55b5-e9a2-469b-a7ee-e7f65f804acf" width="80%" height="80%"/>
+
+> 채팅방에 입장하면 클라이언트가 1초마다 DB에 적재된 채팅내역을 불러오고 화면을 갱신합니다.
+> 동일 채팅방에 있는 다른 클라이언트가 채팅을 입력하면 서버의 API를 호출하고, 내부 채팅 DB에 데이터를 Insert 합니다.
+> Web Socket 방식과의 호환성을 위해 내부적으로 Kafka Producer를 생성하여 Broker에 레코드를 보냅니다.
+
+## 3.5. WebSocket 방식으로 실시간 채팅 기능을 구현하라
 
 
-# 4. 어플리케이션 테스트 방법
 
-4.1. 어플리케이션 실행 전 환경변수에 Jasypt 키 값을 추가합니다.
-``` java
-    jasypt.encryptor.password=samosam_backend
-``` 
-
-4.2. 어플리케이션 실행 후 http://localhost:8080/swagger-ui/index.html#/ 로 접속하여 Swagger-UI 페이지를 호출합니다.
-
-4.3. JWT 토큰은 로그인 성공 시 Http 메시지의 body로 응답받을 수 있습니다.
-
-4.4. JWT 토큰을 발급받으면 Authorize 버튼을 클릭하여 Authorization 헤더를 추가할 수 있습니다.
-
-![image](https://github.com/tlatmsrud/samosam/assets/9374562/7a9f60c3-270d-4e71-bb16-b86e84d04a3d)
+## 5. 회고
+> 채팅은 실시간 처리가 매우 중요하고, 다수의 클라이언트가 존재하는 성질을 띕니다. 클라이언트가 많아질수록 서버에 무리가 가고, 많은 HTTP 오버헤드가 발생하므로 Polling 방식은 실시간 채팅에 적합하지 않습니다.
 
 
-4.5. Authorization 형식에 맞게 발급받은 JWT 토큰을 추가합니다. (ex - Bearer JWT_TOKEN)
-
-
-![image](https://github.com/tlatmsrud/samosam/assets/9374562/250ef5a7-1b53-4076-b68e-f32fa178f9b1)
-
-4.6. 그 후 유저정보 조회, 스크랩, 세액 계산 API를 테스트 해주시면 됩니다. 만약 JWT 토큰을 넣지 않으시면 JWT 관련 에러 및 안내 메시지가 출력됩니다.
-
-4.7. H2 로 접속하실 경우 ID : sa, PASSWORD : 2023, URI : jdbc:h2:mem:samosam 입니다.
-
-4.8. 특이사항이나 문의사항이 있으시다면 010-7936-9566(심승경) 으로 언제든 연락 부탁드립니다! 감사합니다!
