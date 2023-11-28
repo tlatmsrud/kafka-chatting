@@ -134,7 +134,7 @@
         function subscribe(){
             stompClient.subscribe("/subscribe/"+roomId, function(response){
                 console.log("receive message !! : "+response);
-                appendChatting(response)
+                appendChatting(response);
             })
         }
 
@@ -197,6 +197,7 @@
             }
 
             stompClient.send("/app-ws-method/sendMessage", {}, JSON.stringify(data))
+            $(".input-text").val("");
         }
     </script>
 </head>
