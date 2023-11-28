@@ -79,7 +79,7 @@
 
 <img src="https://github.com/tlatmsrud/kafka-chatting/assets/9374562/67593065-c991-407d-94cd-c430c85f174b" width="80%" height="80%"/>
 
-## 4. 회고
+## 메모
 > 채팅은 실시간 처리가 매우 중요하고, 다수의 클라이언트가 존재하는 성질을 띕니다. 클라이언트가 많아질수록 서버에 무리가 가고, 많은 HTTP 오버헤드가 발생하므로 Polling 방식은 실시간 채팅에 적합하지 않았습니다.
 
 
