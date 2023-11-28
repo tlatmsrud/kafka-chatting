@@ -7,10 +7,10 @@ import org.ssk.domain.chatting.domain.ChattingRoom;
 import java.util.List;
 
 /**
- * title        :
+ * title        : ChattingRepository
  * author       : sim
  * date         : 2023-11-24
- * description  :
+ * description  : ChattingRepository
  */
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
     List<Chatting> findByChattingRoom(ChattingRoom chattingRoom);

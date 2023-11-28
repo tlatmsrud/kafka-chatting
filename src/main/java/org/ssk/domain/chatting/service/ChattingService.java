@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * title        :
+ * title        : 채팅 서비스
  * author       : sim
  * date         : 2023-11-23
- * description  :
+ * description  : 채팅 서비스
  */
 
 @Service
@@ -82,10 +82,20 @@ public class ChattingService {
     }
 
 
+    /**
+     * 채팅방에 대한 채팅 내역 조회
+     * @param roomId - 채팅방 ID
+     * @return 채팅 내역
+     */
     public List<ChattingDto> getChattingListByRoomId(Long roomId){
         return chattingSelectStrategy.selectChattingByRoomId(roomId);
     }
 
+    /**
+     * 채팅방 ID에 대한 채팅방 이름 조회
+     * @param roomId - 채팅방 ID
+     * @return 채팅방 이름
+     */
     public String getRoomName(Long roomId) {
         return chattingRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("room is not exists"))

@@ -24,6 +24,7 @@ public class PollingChattingController {
 
     /**
      * 채팅 입력
+     * Kafka Broker 로 전달
      * @param sendDto - 발송할 채팅 Dto
      */
     @ResponseBody
@@ -33,9 +34,9 @@ public class PollingChattingController {
     }
 
     /**
-     * 채팅 조회
+     * 채팅방에 대한 채팅내역 조회
      * @param roomId - 채팅방 ID
-     * @return 채팅 리스트
+     * @return 채팅 내역 리스트
      */
     @GetMapping("/{roomId}")
     public List<ChattingDto> getChatting(@PathVariable Long roomId){

@@ -13,7 +13,7 @@ import java.util.List;
  * title        : 채팅 컨트롤러
  * author       : sim
  * date         : 2023-11-23
- * description  :
+ * description  : 채팅 컨트롤러
  */
 
 @Controller
@@ -26,6 +26,7 @@ public class ChattingController {
     /**
      * 채팅방 생성
      * @param roomName - 채팅방 이름
+     * @return 생성된 채팅방 ID
      */
     @ResponseBody
     @PostMapping("/room")
@@ -35,8 +36,8 @@ public class ChattingController {
 
     /**
      * 채팅방 리스트 조회
-     * @param model - SSR에 대한 Model
-     * @return view 이름
+     * @param model - 모델
+     * @return 채팅방 리스트 View
      */
     @GetMapping("/room")
     public String getChattingRoomList(Model model){
@@ -48,9 +49,9 @@ public class ChattingController {
 
     /**
      * 채팅방 입장
-     * @param model - SSR에 대한 View
+     * @param model - 모델
      * @param roomId - 채팅방 ID
-     * @return view 이름
+     * @return 채팅방 View
      */
     @GetMapping("/room/enter/{roomId}")
     public String enterRoom(Model model, @PathVariable("roomId") Long roomId){

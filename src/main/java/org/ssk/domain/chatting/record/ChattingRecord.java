@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 
 /**
- * title        :
+ * title        : 채팅 레코드
  * author       : sim
  * date         : 2023-11-23
- * description  :
+ * description  : 카프카 브로커로 전달할 채팅 레코드
  */
 
 @Getter
