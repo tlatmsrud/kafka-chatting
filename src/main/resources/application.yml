@@ -2,12 +2,8 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     defer-datasource-initialization: true
-  kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      acks: all
   h2:
     console:
       enabled: true
