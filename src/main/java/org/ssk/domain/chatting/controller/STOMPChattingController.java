@@ -23,7 +23,7 @@ import org.ssk.domain.chatting.service.ChattingService;
 @Controller
 @RequestMapping("/stomp")
 @RequiredArgsConstructor
-public class STOMPController {
+public class STOMPChattingController {
 
     private final ChattingService chattingService;
 
