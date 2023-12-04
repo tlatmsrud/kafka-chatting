@@ -8,8 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.ssk.domain.chatting.dto.ChattingDto;
 import org.ssk.domain.chatting.dto.SendDto;
 import org.ssk.domain.chatting.service.ChattingService;
+
+import java.util.List;
 
 
 /**
@@ -36,9 +39,11 @@ public class STOMPChattingController {
      */
     @GetMapping("/enterChattingRoom/{roomId}")
     public String enterChattingRoom(Model model, @PathVariable(value = "roomId") Long roomId){
+        List<ChattingDto> list = chattingService.getChattingListByRoomId(roomId);
         String roomName = chattingService.getRoomName(roomId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("roomName", roomName);
+        model.addAttribute("list", list);
         return "chatting_stomp";
     }
 
