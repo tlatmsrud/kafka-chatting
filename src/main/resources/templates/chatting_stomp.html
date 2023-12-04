@@ -149,6 +149,7 @@
             return yyyy+"-"+mm+"-"+dd+" "+hh+":"+mi+":"+ss;
 
         }
+
         function appendChatting(response){
 
             let body = JSON.parse(response.body);
@@ -207,6 +208,14 @@
 </div>
 
 <ul class="chat-list">
+    <li class = "my-chat-row" th:each="element : ${list}">
+        <p class = "user-name" th:text = "${element.nickname}">
+            <span class = "time" th:text="timeFormat(${element.time})"></span>
+        </p>
+        <div class="message-row">
+            <p class = "message" th:text="${element.getMessage()}"></p>
+        </div>
+    </li>
 </ul>
 
 <div class = footer>
